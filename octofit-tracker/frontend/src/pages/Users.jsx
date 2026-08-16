@@ -1,17 +1,18 @@
 import { useEffect, useState } from 'react'
+import { getApiUrl } from '../config/api'
 
-export default function Users({ apiUrl }) {
+export default function Users() {
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
   useEffect(() => {
     fetchUsers()
-  }, [apiUrl])
+  }, [])
 
   const fetchUsers = () => {
     setLoading(true)
-    fetch(`${apiUrl}/api/users`)
+    fetch(getApiUrl('users'))
       .then((res) => res.json())
       .then((data) => {
         setUsers(data.users || [])

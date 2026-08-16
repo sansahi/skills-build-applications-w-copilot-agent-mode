@@ -1,6 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import './App.css'
+import { getApiBaseUrlForDisplay, isCodespacesEnvironment } from './config/api'
 import Home from './pages/Home'
 import Users from './pages/Users'
 import Teams from './pages/Teams'
@@ -9,7 +10,8 @@ import Leaderboard from './pages/Leaderboard'
 import Workouts from './pages/Workouts'
 
 function App() {
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+  const apiBaseUrl = getApiBaseUrlForDisplay()
+  const isCodespaces = isCodespacesEnvironment()
 
   return (
     <Router>
@@ -68,18 +70,23 @@ function App() {
         {/* Main Content */}
         <main className="flex-grow-1">
           <Routes>
-            <Route path="/" element={<Home apiUrl={apiUrl} />} />
-            <Route path="/users" element={<Users apiUrl={apiUrl} />} />
-            <Route path="/teams" element={<Teams apiUrl={apiUrl} />} />
-            <Route path="/activities" element={<Activities apiUrl={apiUrl} />} />
-            <Route path="/leaderboard" element={<Leaderboard apiUrl={apiUrl} />} />
-            <Route path="/workouts" element={<Workouts apiUrl={apiUrl} />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/users" element={<Users />} />
+            <Route path="/teams" element={<Teams />} />
+            <Route path="/activities" element={<Activities />} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
+            <Route path="/workouts" element={<Workouts />} />
           </Routes>
         </main>
 
         {/* Footer */}
         <footer className="bg-dark text-white text-center py-3 mt-5">
-          <p className="mb-0">OctoFit Tracker © 2026 | API: {apiUrl}</p>
+          <div className="container-fluid">
+            <p className="mb-2">OctoFit Tracker © 2026</p>
+            <small className="text-muted">
+              Environment: {isCodespaces ? '🌐 Codespaces' : '💻 Local'} | API: {apiBaseUrl}
+            </small>
+          </div>
         </footer>
       </div>
     </Router>

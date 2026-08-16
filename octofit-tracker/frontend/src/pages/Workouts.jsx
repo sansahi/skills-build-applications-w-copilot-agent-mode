@@ -1,17 +1,18 @@
 import { useEffect, useState } from 'react'
+import { getApiUrl } from '../config/api'
 
-export default function Workouts({ apiUrl }) {
+export default function Workouts() {
   const [workouts, setWorkouts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
   useEffect(() => {
     fetchWorkouts()
-  }, [apiUrl])
+  }, [])
 
   const fetchWorkouts = () => {
     setLoading(true)
-    fetch(`${apiUrl}/api/workouts`)
+    fetch(getApiUrl('workouts'))
       .then((res) => res.json())
       .then((data) => {
         setWorkouts(data.workouts || [])

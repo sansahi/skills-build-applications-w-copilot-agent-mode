@@ -1,17 +1,18 @@
 import { useEffect, useState } from 'react'
+import { getApiUrl } from '../config/api'
 
-export default function Teams({ apiUrl }) {
+export default function Teams() {
   const [teams, setTeams] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
   useEffect(() => {
     fetchTeams()
-  }, [apiUrl])
+  }, [])
 
   const fetchTeams = () => {
     setLoading(true)
-    fetch(`${apiUrl}/api/teams`)
+    fetch(getApiUrl('teams'))
       .then((res) => res.json())
       .then((data) => {
         setTeams(data.teams || [])

@@ -1,17 +1,18 @@
 import { useEffect, useState } from 'react'
+import { getApiUrl } from '../config/api'
 
-export default function Activities({ apiUrl }) {
+export default function Activities() {
   const [activities, setActivities] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
   useEffect(() => {
     fetchActivities()
-  }, [apiUrl])
+  }, [])
 
   const fetchActivities = () => {
     setLoading(true)
-    fetch(`${apiUrl}/api/activities`)
+    fetch(getApiUrl('activities'))
       .then((res) => res.json())
       .then((data) => {
         setActivities(data.activities || [])

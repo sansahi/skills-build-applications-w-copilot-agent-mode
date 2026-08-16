@@ -1,17 +1,18 @@
 import { useEffect, useState } from 'react'
+import { getApiUrl } from '../config/api'
 
-export default function Leaderboard({ apiUrl }) {
+export default function Leaderboard() {
   const [leaderboard, setLeaderboard] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
   useEffect(() => {
     fetchLeaderboard()
-  }, [apiUrl])
+  }, [])
 
   const fetchLeaderboard = () => {
     setLoading(true)
-    fetch(`${apiUrl}/api/leaderboard`)
+    fetch(getApiUrl('leaderboard'))
       .then((res) => res.json())
       .then((data) => {
         setLeaderboard(data.leaderboard || [])

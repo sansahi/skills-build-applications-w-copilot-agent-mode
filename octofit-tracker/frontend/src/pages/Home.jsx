@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react'
+import { getApiUrl, getApiBaseUrlForDisplay, isCodespacesEnvironment } from '../config/api'
 
-export default function Home({ apiUrl }) {
+export default function Home() {
   const [status, setStatus] = useState(null)
   const [loading, setLoading] = useState(true)
+  const apiBaseUrl = getApiBaseUrlForDisplay()
+  const isCodespaces = isCodespacesEnvironment()
 
   useEffect(() => {
-    fetch(`${apiUrl}/health`)
+    fetch(`${getApiUrl()}/health`)
       .then((res) => res.json())
       .then((data) => {
         setStatus(data)
@@ -15,7 +18,7 @@ export default function Home({ apiUrl }) {
         console.error('Error fetching API status:', err)
         setLoading(false)
       })
-  }, [apiUrl])
+  }, [])
 
   return (
     <div className="container py-5">
@@ -73,10 +76,24 @@ export default function Home({ apiUrl }) {
             )}
           </div>
 
-          <div className="text-center">
-            <p className="text-muted">
-              API Endpoint: <code>{apiUrl}</code>
-            </p>
+          <div className="card bg-light mb-4">
+            <div className="card-body">
+              <h5 className="card-title">API Configuration</h5>
+              <dl className="mb-0">
+                <dt>Environment</dt>
+                <dd>{isCodespaces ? '🌐 GitHub Codespaces' : '💻 Local Development'}</dd>
+                <dt>API Base URL</dt>
+                <dd>
+                  <code>{apiBaseUrl}</code>
+                </dd>
+                <dt>Configuration</dt>
+                <dd>
+                  <small className="text-muted">
+                    Set VITE_CODESPACE_NAME in .env.local for Codespaces support
+                  </small>
+                </dd>
+              </dl>
+            </div>
           </div>
         </div>
       </div>
