@@ -15,12 +15,14 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/octofi
 const getApiUrl = () => {
   const codespaceName = process.env.CODESPACE_NAME;
   if (codespaceName) {
-    return `https://${codespaceName}-8000.preview.app.github.dev`;
+    return `https://${codespaceName}-8000.app.github.dev`;
   }
   return `http://localhost:${PORT}`;
 };
 
 const API_URL = getApiUrl();
+const isCodespaces = !!process.env.CODESPACE_NAME;
+const environment = isCodespaces ? 'Codespaces' : 'Local';
 
 // Middleware
 app.use(cors());
@@ -31,13 +33,27 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/', (req, res) => {
   res.json({ 
     message: 'OctoFit Tracker API',
+    version: '1.0.0',
+    environment,
     apiUrl: API_URL,
-    version: '1.0.0'
+    endpoints: {
+      users: '/api/users',
+      teams: '/api/teams',
+      activities: '/api/activities',
+      leaderboard: '/api/leaderboard',
+      workouts: '/api/workouts',
+      health: '/health'
+    }
   });
 });
 
 app.get('/health', (req, res) => {
-  res.json({ status: 'OK', apiUrl: API_URL });
+  res.json({ 
+    status: 'OK',
+    environment,
+    apiUrl: API_URL,
+    timestamp: new Date().toISOString()
+  });
 });
 
 // API Routes
@@ -54,8 +70,13 @@ mongoose.connect(MONGODB_URI)
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log(`API URL: ${API_URL}`);
-  console.log(`Frontend will run on port 5173`);
-  console.log(`MongoDB running on port 27017`);
+  console.log(`\n${'='.repeat(70)}`);
+  console.log(`🚀 OctoFit Tracker API Server Started`);
+  console.log(`${'='.repeat(70)}`);
+  console.log(`Environment:        ${environment}`);
+  console.log(`Server Port:        ${PORT}`);
+  console.log(`API Base URL:       ${API_URL}`);
+  console.log(`MongoDB:            mongodb://localhost:27017/octofit_db`);
+  console.log(`Frontend Port:      5173`);
+  console.log(`${'='.repeat(70)}\n`);
 });
